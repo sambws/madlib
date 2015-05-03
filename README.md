@@ -5,3 +5,4 @@ it has a ton of shorthands for love functions, as well as an entity system, a le
 anim8 - kikito  
 require - kikito  
 middleclass - kikito 
+hump.camera - vrld
