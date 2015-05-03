@@ -14,8 +14,7 @@ it focuses on minimalism and modification possibility to make your life easier.
   \____)|_) \_)
 
 --TODO--
-+sounds sounds sounds
-+research a good collision engine (check if bump 3.0 has support for slopes and diagonal walls and stuff)
++BUMP 3.0
 
 --GLARING PROBLEMS--
 
@@ -40,14 +39,14 @@ hump.camera support
 TEsound support (UNTESTED)
 ]]
 
---require
-require "lib.require"
 --classes
 class = require "lib.middleclass"
 --anim8
 anim8 = require "lib.anim8"
 --cam
 camera = require "lib.camera"
+--require
+require "lib.require"
 --sound
 require "lib.TEsound"
 
@@ -71,6 +70,9 @@ function mad:load()
 	cam = camera(0, 0)
 	local camx, camy = cam:cameraCoords(0, 0)
 	cam:lookAt(camx, camy)
+
+	--debug display
+	mad:addEnt(debug, 0, 0)
 end
 
 function mad:update(dt)
@@ -99,6 +101,13 @@ function mad:draw()
 	end
 end
 
+function mad:pressed(key)
+	if key == "`" then
+		if not debug then debug = true
+		else debug = false end
+	end
+end
+
 function mad:zord(e, mod)
 	--different mods affect when the object will go in front/behind another
 	--mod = 2: will change on center
@@ -113,20 +122,15 @@ function e:initialize(x, y)
 	self.x = x
 	self.y = y
 end
-
-function e:update(s)
+--z is optional; if you set it to false, then it doesn't zord automatically
+function e:update(s, z)
 	if s.orientation ~= nil or s.orientation ~= "" then
 		mad:setOrientation(s, s.orientation)
 	else
 		mad:setOrientation(s, "TOPLEFT")
 	end
-	mad:zord(s)
-end
-
-function mad:pressed(key)
-	if key == "`" then
-		if not debug then debug = true
-		else debug = false end
+	if z == nil or z == true then
+		mad:zord(s)
 	end
 end
 
@@ -136,6 +140,8 @@ function Entity(name, sub) --returns entity generated
 	--DEFAULT ENT VALUES ARE SET HERE!
 	t.x = 0
 	t.y = 0
+	t.ox = 0
+	t.oy = 0
 	t.w = 32
 	t.h = 32
 	t.z = 0
@@ -169,8 +175,8 @@ end
 
 --rooms
 function mad:changeRoom(rm)
-	changed_room = true
 	room = rm
+	changed_room = true
 end
 
 function mad:runRoom(name, f)
@@ -208,11 +214,11 @@ function col(r, g, b, a)
 end
 
 --audio shorthands
-function playsound(f, tag)
+function play_sound(f, tag)
 	TEsound.play(snd_path .. "/" .. f, tag)
 end
 
-function stopsound(tag)
+function stop_sound(tag)
 	TEsound.stop(tag)
 end
 
@@ -273,6 +279,12 @@ function mad:draw_anim(s, anim)
 	anim:draw(s.spr, s.x - (s.w / 2), s.y - (s.h / 2))
 end
 
+--draws a square where the origin is (should be top-left if orientation is set properly)
+function mad:testOrigin(s)
+	col(255, 0, 0, 255)
+	rect(s.ox - 8, s.oy - 8, 16, 16)
+end
+
 function img(i, x, y)
 	love.graphics.draw(i, x, y)
 end
@@ -306,10 +318,12 @@ function mad:get_sprite(img, fw, fh, s)
 	return g
 end
 
---ez math
-function mad:clamp(low, n, high) return math.min(math.max(low, n), high) end
+--math
+function clamp(low, n, high) return math.min(math.max(low, n), high) end
 
 function rand(min, max) --returns random number
 	local q = love.math.random(min, max)
 	return q
 end
+
+function lerp(a,b,t) return (1-t)*a + t*b end

@@ -5,6 +5,8 @@ function test:initialize(x, y)
 	self.super.initialize(self, x, y)
 	self.w = 64; self.h = 64
 
+	self.orientation = "CENTER"
+
 	--add it to the array
 	mad:setType(self, "ent")
 end
@@ -17,5 +19,6 @@ end
 
 function test:draw()
 	col(0, 0, 0, 255)
-	rect(self.x, self.y, self.w, self.h)
+	rect(self.ox, self.oy, self.w, self.h)
+	--mad:testOrigin(self)
 end

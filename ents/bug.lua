@@ -20,33 +20,21 @@ end
 
 function bug:update(dt)
 	--cam:lookAt(self.x, self.y)
-	
-	--[[movement
-	if mad:key("left") then
-		self.x = self.x - self.spd
-	elseif mad:key("right") then
-		self.x = self.x + self.spd
-	end
-	if mad:key("up") then
-		self.y = self.y - self.spd
-	elseif mad:key("down") then
-		self.y = self.y + self.spd
-	end]]
-
-	self.x, self.y = cam:cameraCoords(love.mouse.getPosition())
+	self.x, self.y = cam:worldCoords(love.mouse.getPosition())
 
 	--clamp x/y
-	self.x = mad:clamp(0, self.x, 800)
-	self.y = mad:clamp(0, self.y, 600)
+	self.x = clamp(0, self.x, 800)
+	self.y = clamp(0, self.y, 600)
 
 	--animation updating
 	self.buggin:update(dt)
 
 	--zord/set orientation
-	self.super:update(self)
+	self.super:update(self, false)
 end
 
 function bug:draw()
 	col(255, 255, 255, 255)
 	self.buggin:draw(self.spr, self.ox, self.oy)
+	--mad:testOrigin(self)
 end

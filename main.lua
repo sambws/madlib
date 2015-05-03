@@ -1,24 +1,20 @@
 require "lib.madlib"
-
---get all ents
 require.tree(ent_path)
 
 function love.load()
 	mad:load();
-	mad:changeRoom("AMPHIBIANS")
+	mad:changeRoom("test")
 
-	--add bg/debug
+	--add bg
 	local _bg = bg:new(0, 0)
-	local d = debug:new(0, 0)
 end
 
 function love.update(dt)
 	mad:update(dt)
 
-	mad:runRoom("AMPHIBIANS", function()
+	mad:runRoom("test", function()
 		mad:addEnt(bug, rand(0, 800), rand(0, 600))
-		mad:addEnt(bug, rand(0, 800), rand(0, 600))
-		mad:addEnt(test, 0, 0)
+		mad:addEnt(test, 60, 50)
 	end)
 end
 
