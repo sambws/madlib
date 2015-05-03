@@ -14,7 +14,6 @@ it focuses on minimalism and modification possibility to make your life easier.
   \____)|_) \_)
 
 --TODO--
-+ADD A GOOD CAMERA
 +sounds sounds sounds
 +research a good collision engine (check if bump 3.0 has support for slopes and diagonal walls and stuff)
 
@@ -36,14 +35,21 @@ sprite orientation system
 room system
 shorthands for certain love2d functions (graphic primitives, key inputs)
 anim8 support/shorthands
+hump.camera support
 ]]
 
+--require
 require "lib.require"
+--classes
 class = require "lib.middleclass"
+--anim8
 anim8 = require "lib.anim8"
+--cam
+camera = require("lib.camera")
 
 mad = {} --home
 ents = {} --used to store ents
+gui = {} --used to store gui elements
 room = "" --used to run room code/make levels a thing
 
 debug = true --show console y/n
@@ -57,20 +63,48 @@ local changed_room = true --this variable checks if the room is switching. if it
 
 --empty ent class (base)
 e = class('Entity')
-function e:initialize()
+function e:initialize(x, y)
+	self.x = x
+	self.y = y
+end
+
+function e:update(s)
+	if s.orientation ~= nil or s.orientation ~= "" then
+		mad:setOrientation(s, s.orientation)
+	else
+		mad:setOrientation(s, "TOPLEFT")
+	end
+	mad:zord(s)
 end
 
 --core functions
+function mad:load()
+	--setup the camera
+	cam = camera(0, 0)
+	local camx, camy = cam:cameraCoords(0, 0)
+	cam:lookAt(camx, camy)
+end
+
 function mad:update(dt)
 	for k,v in pairs(ents) do
+		if v.update then v:update(dt) end
+	end
+	for k,v in pairs(gui) do
 		if v.update then v:update(dt) end
 	end
 end
 
 local function drawSort(a,b) return a.z > b.z end
 function mad:draw()
+	cam:attach()
+	--render and zord ents inside the camera
 	if not changed_room then table.sort(ents, drawSort) end
 	for k,v in pairs(ents) do
+		if v.draw then v:draw() end
+	end
+	cam:detach()
+	--render gui outside of the camera
+	for k,v in pairs(gui) do
 		if v.draw then v:draw() end
 	end
 end
@@ -99,6 +133,18 @@ end
 
 function mad:addEnt(t)
 	table.insert(ents, t)
+end
+
+function mad:addGui(t)
+	table.insert(gui, t)
+end
+
+function mad:setType(s, t)
+	if t == "ent" then
+		table.insert(ents, s)
+	elseif t == "gui" then
+		table.insert(gui, s)
+	end
 end
 
 function mad:removeEnt(t)

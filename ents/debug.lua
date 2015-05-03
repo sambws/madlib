@@ -6,7 +6,7 @@ function debug:initialize(x, y)
 	self.w = 0; self.h = 0
 	self.pers = true
 
-	mad:addEnt(self)
+	mad:setType(self, "gui")
 end
 
 function debug:update(dt)

@@ -1,20 +1,24 @@
 bug = Entity("bug", e)
 
 function bug:initialize(x, y)
-	self.x = x;	self.y = y
+	--init values
+	self.super.initialize(self, x, y)
 	self.w = 32; self.h = 32
 
+	--sprites
 	self.spr = mad:new_grid(self, "bug", self.w, self.h)
 	self.buggin = mad:anim(self.grid('1-2', 1), 0.1)
+	self.orientation = "CENTER"
 
+	--personal vars
 	self.spd = 4
 
-	mad:addEnt(self)
+	--add it to the array
+	mad:setType(self, "ent")
 end
 
 function bug:update(dt)
-	mad:setOrientation(self, "CENTER")
-
+	--movement
 	if mad:key("left") then
 		self.x = self.x - self.spd
 	elseif mad:key("right") then
@@ -30,8 +34,11 @@ function bug:update(dt)
 	self.x = mad:clamp(0, self.x, 800)
 	self.y = mad:clamp(0, self.y, 600)
 
+	--animation updating
 	self.buggin:update(dt)
-	mad:zord(self)
+
+	--zord/set orientation
+	self.super:update(self)
 end
 
 function bug:draw()

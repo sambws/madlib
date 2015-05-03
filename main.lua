@@ -4,6 +4,7 @@ require "lib.madlib"
 require.tree(ent_path)
 
 function love.load()
+	mad:load();
 	mad:changeRoom("AMPHIBIANS")
 
 	--add bg/debug
@@ -15,7 +16,8 @@ function love.update(dt)
 	mad:update(dt)
 
 	mad:runRoom("AMPHIBIANS", function()
-		local b = bug:new(rand(0, 800), rand(0, 600))	
+		local b = bug:new(rand(0, 800), rand(0, 600))
+		local t = test:new(0, 0)
 	end)
 end
 
