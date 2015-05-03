@@ -131,12 +131,9 @@ function Entity(name, sub) --returns entity generated
 	return t
 end
 
-function mad:addEnt(t)
-	table.insert(ents, t)
-end
-
-function mad:addGui(t)
-	table.insert(gui, t)
+function mad:addEnt(ent, xx, yy)
+	local e = ent:new(xx, yy)
+	return e
 end
 
 function mad:setType(s, t)
@@ -262,7 +259,7 @@ function mad:draw_anim(s, anim)
 	anim:draw(s.spr, s.x - (s.w / 2), s.y - (s.h / 2))
 end
 
-function mad:img(i, x, y)
+function img(i, x, y)
 	love.graphics.draw(i, x, y)
 end
 

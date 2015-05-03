@@ -18,6 +18,7 @@ function bug:initialize(x, y)
 end
 
 function bug:update(dt)
+	--cam:lookAt(self.x, self.y)
 	--movement
 	if mad:key("left") then
 		self.x = self.x - self.spd

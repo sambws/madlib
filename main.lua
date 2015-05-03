@@ -16,8 +16,9 @@ function love.update(dt)
 	mad:update(dt)
 
 	mad:runRoom("AMPHIBIANS", function()
-		local b = bug:new(rand(0, 800), rand(0, 600))
-		local t = test:new(0, 0)
+		mad:addEnt(bug, rand(0, 800), rand(0, 600))
+		mad:addEnt(bug, rand(0, 800), rand(0, 600))
+		mad:addEnt(test, 0, 0)
 	end)
 end
 
