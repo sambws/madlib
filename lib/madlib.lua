@@ -37,6 +37,7 @@ room system
 shorthands for certain love2d functions (graphic primitives, key inputs)
 anim8 support/shorthands
 hump.camera support
+TEsound support (UNTESTED)
 ]]
 
 --require
@@ -46,7 +47,9 @@ class = require "lib.middleclass"
 --anim8
 anim8 = require "lib.anim8"
 --cam
-camera = require("lib.camera")
+camera = require "lib.camera"
+--sound
+require "lib.TEsound"
 
 mad = {} --home
 ents = {} --used to store ents
@@ -77,6 +80,7 @@ function mad:update(dt)
 	for k,v in pairs(gui) do
 		if v.update then v:update(dt) end
 	end
+	TEsound.cleanup()
 end
 
 local function drawSort(a,b) return a.z > b.z end
@@ -201,6 +205,15 @@ end
 
 function col(r, g, b, a)
 	love.graphics.setColor(r, g, b, a)
+end
+
+--audio shorthands
+function playsound(f, tag)
+	TEsound.play(snd_path .. "/" .. f, tag)
+end
+
+function stopsound(tag)
+	TEsound.stop(tag)
 end
 
 --text 
