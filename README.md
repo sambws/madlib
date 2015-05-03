@@ -4,5 +4,5 @@ it has a ton of shorthands for love functions, as well as an entity system, a le
 # libs in use  
 anim8 - kikito  
 require - kikito  
-middleclass - kikito 
+middleclass - kikito   
 hump.camera - vrld
