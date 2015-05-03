@@ -7,8 +7,9 @@ function bug:initialize(x, y)
 
 	--sprites
 	self.spr = mad:new_grid(self, "bug", self.w, self.h)
-	self.buggin = mad:anim(self.grid('1-2', 1), 0.1)
 	self.orientation = "CENTER"
+	--anims
+	self.buggin = mad:anim(self.grid('1-2', 1), 0.1)
 
 	--personal vars
 	self.spd = 4
@@ -19,7 +20,8 @@ end
 
 function bug:update(dt)
 	--cam:lookAt(self.x, self.y)
-	--movement
+	
+	--[[movement
 	if mad:key("left") then
 		self.x = self.x - self.spd
 	elseif mad:key("right") then
@@ -29,7 +31,9 @@ function bug:update(dt)
 		self.y = self.y - self.spd
 	elseif mad:key("down") then
 		self.y = self.y + self.spd
-	end
+	end]]
+
+	self.x, self.y = cam:cameraCoords(love.mouse.getPosition())
 
 	--clamp x/y
 	self.x = mad:clamp(0, self.x, 800)

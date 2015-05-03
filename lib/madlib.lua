@@ -21,6 +21,7 @@ it focuses on minimalism and modification possibility to make your life easier.
 
 --IDEAS--
 +clean this mess
++keep an eye on the orientation system, it might be weird.
 
 --SOLVED PROBLEMS--
 +weird class var inheritence was caused by using a shorthand for self and not actually writing self
@@ -61,22 +62,6 @@ snd_path = "res/snds"
 
 local changed_room = true --this variable checks if the room is switching. if it is, it runs the init function for the room. it is usually set to false, and only true when you want to run the init function (on entrance to the room)
 
---empty ent class (base)
-e = class('Entity')
-function e:initialize(x, y)
-	self.x = x
-	self.y = y
-end
-
-function e:update(s)
-	if s.orientation ~= nil or s.orientation ~= "" then
-		mad:setOrientation(s, s.orientation)
-	else
-		mad:setOrientation(s, "TOPLEFT")
-	end
-	mad:zord(s)
-end
-
 --core functions
 function mad:load()
 	--setup the camera
@@ -104,9 +89,34 @@ function mad:draw()
 	end
 	cam:detach()
 	--render gui outside of the camera
+	if not changed_room then table.sort(gui, drawSort) end
 	for k,v in pairs(gui) do
 		if v.draw then v:draw() end
 	end
+end
+
+function mad:zord(e, mod)
+	--different mods affect when the object will go in front/behind another
+	--mod = 2: will change on center
+	--mod = 1: will change on bottom
+	mod = mod or 1
+	e.z = -e.y - (e.h / mod)
+end
+
+--empty ent class (base)
+e = class('Entity')
+function e:initialize(x, y)
+	self.x = x
+	self.y = y
+end
+
+function e:update(s)
+	if s.orientation ~= nil or s.orientation ~= "" then
+		mad:setOrientation(s, s.orientation)
+	else
+		mad:setOrientation(s, "TOPLEFT")
+	end
+	mad:zord(s)
 end
 
 function mad:pressed(key)
@@ -174,15 +184,6 @@ function mad:runRoom(name, f)
 			changed_room = false
 		end
 	end
-end
-
---zords zords zords
-function mad:zord(e, mod)
-	--different mods affect when the object will go in front/behind another
-	--mod = 2: will change on center
-	--mod = 1: will change on bottom
-	mod = mod or 1
-	e.z = -e.y - (e.h / mod)
 end
 
 --primitive shorthands
