@@ -15,15 +15,16 @@ it focuses on minimalism and modification possibility to make your life easier.
 
 --TODO--
 +ADD A GOOD CAMERA
++sounds sounds sounds
 +research a good collision engine (check if bump 3.0 has support for slopes and diagonal walls and stuff)
 
 --GLARING PROBLEMS--
 
 --IDEAS--
-+clean this mess in general
-+clean up classes and entitiy functions and stuff
++clean this mess
 
---SOLVED--
+--SOLVED PROBLEMS--
++weird class var inheritence was caused by using a shorthand for self and not actually writing self
 +added middleclass support
 +the persistence problems were caused by the zord system, which reorganized the table. this would bring up problems when changing rooms.
 i got around this by making it so that it wouldn't z-order in the mad:draw when the changed_room variable is true
@@ -96,9 +97,7 @@ function Entity(name, sub) --returns entity generated
 	return t
 end
 
-function mad:addEnt(t, x, y)
-	--this was put there because there are strange variable merging problems when an entity goes into another room with an entity of the same type.
-	--removeEnt(t)
+function mad:addEnt(t)
 	table.insert(ents, t)
 end
 
